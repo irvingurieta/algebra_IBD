@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratorio GeoGebra: irreducibilidad en Q[x]</title>
+<script src="https://www.geogebra.org/apps/deployggb.js"></script>
+<style>
+  :root{
+    --azul:#174a7e;
+    --azul2:#eaf2fb;
+    --verde:#176b45;
+    --verde2:#e9f7f0;
+    --rojo:#9d2a2a;
+    --rojo2:#fff0f0;
+    --amarillo:#8a5a00;
+    --amarillo2:#fff7dd;
+    --gris:#5e6875;
+    --borde:#d9e0e8;
+    --fondo:#f5f7fa;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--fondo);
+    color:#17202a;
+    line-height:1.45;
+  }
+  header{
+    background:linear-gradient(135deg,#123c66,#236ca8);
+    color:white;
+    padding:22px clamp(18px,4vw,48px);
+  }
+  header h1{margin:0 0 5px;font-size:clamp(1.35rem,3vw,2rem)}
+  header p{margin:0;max-width:1000px;opacity:.95}
+  main{max-width:1450px;margin:18px auto;padding:0 16px 32px}
+  .theorem{
+    background:white;border:1px solid var(--borde);border-left:6px solid var(--azul);
+    border-radius:12px;padding:14px 18px;margin-bottom:16px;box-shadow:0 2px 8px #0000000c;
+  }
+  .theorem strong{color:var(--azul)}
+  .layout{display:grid;grid-template-columns:minmax(330px,430px) minmax(520px,1fr);gap:16px;align-items:start}
+  .panel,.applet-card,.activity,.extension{
+    background:white;border:1px solid var(--borde);border-radius:14px;
+    box-shadow:0 3px 12px #0000000d;
+  }
+  .panel{padding:16px}
+  .panel h2,.activity h2,.extension h2{margin:0 0 12px;color:var(--azul);font-size:1.15rem}
+  .step{border-top:1px solid var(--borde);padding-top:13px;margin-top:13px}
+  .step:first-of-type{border-top:0;padding-top:0;margin-top:0}
+  .step-title{font-weight:750;margin-bottom:8px}
+  label{font-size:.92rem;font-weight:650;color:#273444}
+  select,input[type=number]{
+    width:100%;padding:8px 9px;border:1px solid #bfc9d5;border-radius:8px;
+    background:white;font-size:1rem;
+  }
+  input[type=radio]{transform:translateY(1px)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .field span{display:block;font-size:.78rem;color:var(--gris);margin-top:3px}
+  button{
+    border:0;border-radius:9px;padding:9px 12px;font-weight:750;cursor:pointer;
+    background:var(--azul);color:white;font-size:.92rem;
+  }
+  button.secondary{background:#e8eef5;color:#173b60}
+  button.success{background:var(--verde)}
+  button.warning{background:#9a6200}
+  button.ghost{background:white;color:var(--azul);border:1px solid #9eb7ce}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  .buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+  .formula{
+    background:#f7f9fc;border:1px solid var(--borde);border-radius:10px;
+    padding:10px 12px;margin-top:9px;font-family:"Cambria Math","Times New Roman",serif;
+    font-size:1.08rem;overflow-wrap:anywhere;
+  }
+  .message{border-radius:10px;padding:10px 12px;margin-top:9px;border:1px solid transparent}
+  .info{background:var(--azul2);color:#183f63;border-color:#c9def1}
+  .good{background:var(--verde2);color:#14583b;border-color:#b9e3ce}
+  .bad{background:var(--rojo2);color:#812323;border-color:#efc7c7}
+  .hint{background:var(--amarillo2);color:#654400;border-color:#ead89b}
+  .muted{font-size:.85rem;color:var(--gris)}
+  .candidates{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{
+    padding:4px 8px;border-radius:999px;background:#edf2f7;border:1px solid #d7e0e9;
+    font-family:"Cambria Math","Times New Roman",serif;cursor:pointer;
+  }
+  .chip:hover{background:#dceafb}
+  .testlog{max-height:150px;overflow:auto;margin-top:8px}
+  .testrow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #d8dee6;font-size:.9rem}
+  .applet-card{padding:12px}
+  #ggb-element{min-height:520px;border-radius:10px;overflow:hidden;background:#fff}
+  .applet-note{font-size:.82rem;color:var(--gris);padding:7px 3px 0}
+  .activity,.extension{padding:18px;margin-top:16px}
+  .activity ol{margin:8px 0 0;padding-left:22px}
+  .activity li{margin:6px 0}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .small-card{border:1px solid var(--borde);border-radius:11px;padding:13px;background:#fbfcfe}
+  .small-card h3{margin:0 0 7px;font-size:1rem;color:#244e72}
+  table{border-collapse:collapse;width:100%;font-size:.9rem}
+  th,td{border:1px solid var(--borde);padding:7px;text-align:left;vertical-align:top}
+  th{background:#eef3f8}
+  footer{max-width:1450px;margin:0 auto;padding:0 18px 28px;color:var(--gris);font-size:.82rem}
+  @media (max-width:980px){
+    .layout{grid-template-columns:1fr}
+    .two-col{grid-template-columns:1fr}
+    #ggb-element{min-height:480px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Laboratorio GeoGebra: irreducibilidad de polinomios en ℚ[x]</h1>
+  <p>Explora polinomios de grados 2 y 3, construye los candidatos a raíces racionales, comprueba valores y justifica la reducibilidad o irreducibilidad.</p>
+</header>
+
+<main>
+  <section class="theorem">
+    <strong>Teorema que se desea afianzar.</strong>
+    Sea <em>f</em>(x) ∈ ℚ[x] de grado 2 o 3. Entonces, <em>f</em>(x) es reducible sobre ℚ
+    si y solo si tiene un cero en ℚ.
+  </section>
+
+  <div class="layout">
+    <section class="panel">
+      <h2>Panel de investigación</h2>
+
+      <div class="step">
+        <div class="step-title">1. Construye el polinomio</div>
+        <div class="grid2">
+          <div class="field">
+            <label for="degree">Grado</label>
+            <select id="degree">
+              <option value="2">Grado 2</option>
+              <option value="3">Grado 3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tipo de reto</label>
+            <div class="buttons" style="margin-top:2px">
+              <button class="secondary" id="reducibleBtn">Reducible</button>
+              <button class="secondary" id="irreducibleBtn">Irreducible</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="coefficients" class="grid3" style="margin-top:10px">
+          <div class="field"><label for="a">a</label><input id="a" type="number" value="2" step="1"></div>
+          <div class="field"><label for="b">b</label><input id="b" type="number" value="1" step="1"></div>
+          <div class="field"><label for="c">c</label><input id="c" type="number" value="-1" step="1"></div>
+          <div class="field" id="dField" style="display:none"><label for="d">d</label><input id="d" type="number" value="-2" step="1"></div>
+        </div>
+        <div class="buttons">
+          <button id="updateBtn">Actualizar gráfica</button>
+          <button class="ghost" id="resetBtn">Ejemplo inicial</button>
+        </div>
+        <div id="polynomialDisplay" class="formula"></div>
+        <div class="muted">Se usan coeficientes enteros. Esto representa también el caso ℚ[x], pues se pueden eliminar denominadores multiplicando por un racional no nulo.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">2. Formula una conjetura</div>
+        <label><input type="radio" name="prediction" value="reducible"> Es reducible sobre ℚ</label><br>
+        <label><input type="radio" name="prediction" value="irreducible"> Es irreducible sobre ℚ</label>
+        <div class="buttons">
+          <button class="secondary" id="savePredictionBtn">Registrar conjetura</button>
+        </div>
+        <div id="predictionMessage"></div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">3. Construye los candidatos racionales</div>
+        <div class="muted">Para un polinomio con coeficientes enteros, una raíz racional p/q escrita en forma irreducible debe cumplir p | término independiente y q | coeficiente principal.</div>
+        <div class="buttons">
+          <button class="warning" id="candidateBtn">Mostrar candidatos</button>
+          <button class="ghost" id="hideCandidatesBtn">Ocultarlos</button>
+        </div>
+        <div id="candidateBox" style="display:none">
+          <div id="candidateExplanation" class="message hint"></div>
+          <div id="candidateList" class="candidates"></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">4. Prueba un posible cero r = p/q</div>
+        <div class="grid2">
+          <div class="field"><label for="p">Numerador p</label><input id="p" type="number" value="1" step="1"></div>
+          <div class="field"><label for="q">Denominador q ≠ 0</label><input id="q" type="number" value="2" step="1"></div>
+        </div>
+        <div class="buttons">
+          <button class="success" id="testBtn">Calcular f(p/q)</button>
+          <button class="ghost" id="clearTestsBtn">Borrar pruebas</button>
+        </div>
+        <div id="testMessage"></div>
+        <div id="testLog" class="testlog"></div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">5. Decide y justifica</div>
+        <div class="buttons">
+          <button id="revealBtn">Revelar clasificación</button>
+          <button class="ghost" id="hintBtn">Pista matemática</button>
+        </div>
+        <div id="conclusion"></div>
+      </div>
+    </section>
+
+    <section class="applet-card">
+      <div id="ggb-element"></div>
+      <div class="applet-note">
+        La gráfica ayuda a localizar ceros reales, pero no decide por sí sola si son racionales. La decisión algebraica se realiza con la lista completa de candidatos.
+      </div>
+    </section>
+  </div>
+
+  <section class="activity">
+    <h2>Guía de trabajo para el estudiante</h2>
+    <div class="two-col">
+      <div class="small-card">
+        <h3>Secuencia de exploración</h3>
+        <ol>
+          <li>Observa el polinomio y su gráfica. Formula una conjetura.</li>
+          <li>Identifica el coeficiente principal y el término independiente.</li>
+          <li>Construye todos los candidatos p/q en forma irreducible.</li>
+          <li>Evalúa candidatos hasta hallar un cero racional o agotar la lista.</li>
+          <li>Si f(r)=0, usa el teorema del factor: x−r divide a f(x).</li>
+          <li>Explica por qué, en grados 2 y 3, no hallar ceros racionales implica irreducibilidad.</li>
+        </ol>
+      </div>
+      <div class="small-card">
+        <h3>Preguntas de institucionalización</h3>
+        <table>
+          <tr><th>Pregunta</th><th>Idea esperada</th></tr>
+          <tr><td>¿Por qué basta buscar en una lista finita?</td><td>Por el teorema de la raíz racional.</td></tr>
+          <tr><td>¿Qué produce un cero racional?</td><td>Un factor lineal con coeficientes racionales.</td></tr>
+          <tr><td>¿Por qué importa que el grado sea 2 o 3?</td><td>Una factorización no trivial necesariamente contiene un factor lineal.</td></tr>
+          <tr><td>¿La gráfica prueba que una raíz es racional?</td><td>No; solo sugiere su ubicación.</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="extension">
+    <h2>Extensión: el límite de la condición “grado 2 o 3”</h2>
+    <p>Analiza <strong>g(x)=x⁴+4</strong>. No tiene ceros racionales, pero es reducible sobre ℚ:</p>
+    <div class="formula">x⁴ + 4 = (x² − 2x + 2)(x² + 2x + 2).</div>
+    <div class="buttons">
+      <button class="warning" id="quarticBtn">Graficar el contraejemplo</button>
+      <button class="ghost" id="returnBtn">Volver al polinomio actual</button>
+    </div>
+    <div class="muted">Este ejemplo muestra que el criterio “reducible ⇔ tiene cero racional” no se extiende automáticamente a grado 4.</div>
+  </section>
+</main>
+
+<footer>
+  Recurso diseñado para GeoGebra Classic/Calculadora Gráfica. Requiere conexión a Internet al abrir este archivo HTML para cargar el applet de GeoGebra.
+</footer>
+
+<script>
+let ggbReady = false;
+let tested = [];
+let savedPrediction = null;
+let currentCoeffs = [2,1,-1];
+
+const params = {
+  appName: "graphing",
+  width: 900,
+  height: 520,
+  showToolBar: false,
+  showAlgebraInput: false,
+  showMenuBar: false,
+  enableShiftDragZoom: true,
+  enableRightClick: false,
+  language: "es",
+  appletOnLoad: function(api){
+    window.ggbApplet = api;
+    ggbReady = true;
+    updateConstruction();
+  }
+};
+const applet = new GGBApplet(params, true);
+window.addEventListener("load", () => applet.inject("ggb-element"));
+
+function gcd(a,b){
+  a=Math.abs(Math.trunc(a)); b=Math.abs(Math.trunc(b));
+  while(b){ const t=a%b; a=b; b=t; }
+  return a || 1;
+}
+function frac(n,d=1){
+  if(d===0) throw new Error("El denominador no puede ser cero.");
+  if(d<0){n=-n;d=-d}
+  const g=gcd(n,d);
+  return {n:n/g,d:d/g};
+}
+function addFrac(x,y){return frac(x.n*y.d+y.n*x.d,x.d*y.d)}
+function mulFrac(x,y){return frac(x.n*y.n,x.d*y.d)}
+function fracToText(x){
+  x=frac(x.n,x.d);
+  return x.d===1 ? String(x.n) : `${x.n}/${x.d}`;
+}
+function fracToHTML(x){
+  x=frac(x.n,x.d);
+  return x.d===1 ? String(x.n) : `<span style="white-space:nowrap">${x.n}/${x.d}</span>`;
+}
+function minusRootText(r){
+  r=frac(r.n,r.d);
+  if(r.n<0) return `x + ${fracToText(frac(-r.n,r.d))}`;
+  return `x − ${fracToText(r)}`;
+}
+function divisors(n){
+  n=Math.abs(Math.trunc(n));
+  if(n===0) return [];
+  const ans=[];
+  for(let i=1;i*i<=n;i++){
+    if(n%i===0){ans.push(i); if(i*i!==n) ans.push(n/i)}
+  }
+  return ans.sort((a,b)=>a-b);
+}
+function degree(){return Number(document.getElementById("degree").value)}
+function getCoeffs(){
+  const n=degree();
+  const a=Number(document.getElementById("a").value);
+  const b=Number(document.getElementById("b").value);
+  const c=Number(document.getElementById("c").value);
+  const d=Number(document.getElementById("d").value);
+  if(![a,b,c].every(Number.isInteger) || (n===3 && !Number.isInteger(d))){
+    throw new Error("Usa coeficientes enteros.");
+  }
+  if(a===0) throw new Error("El coeficiente principal a debe ser distinto de cero.");
+  return n===2 ? [a,b,c] : [a,b,c,d];
+}
+function polynomialPlain(coeffs){
+  const n=coeffs.length-1;
+  let out="";
+  coeffs.forEach((coef,i)=>{
+    const power=n-i;
+    if(coef===0) return;
+    const sign=coef<0 ? "−" : "+";
+    const abs=Math.abs(coef);
+    let term="";
+    if(power===0) term=String(abs);
+    else{
+      const cpart=abs===1 ? "" : String(abs);
+      term=cpart+"x"+(power===1?"":`^${power}`);
+    }
+    if(out==="") out=(coef<0?"−":"")+term;
+    else out+=` ${sign} ${term}`;
+  });
+  return out || "0";
+}
+function polynomialHTML(coeffs){
+  return polynomialPlain(coeffs).replaceAll("^2","²").replaceAll("^3","³").replaceAll("^4","⁴");
+}
+function polynomialGGB(coeffs){
+  const n=coeffs.length-1;
+  return coeffs.map((coef,i)=>{
+    const p=n-i;
+    if(p===0) return `(${coef})`;
+    if(p===1) return `(${coef})*x`;
+    return `(${coef})*x^${p}`;
+  }).join("+");
+}
+function evalAt(coeffs,r){
+  let acc=frac(coeffs[0],1);
+  for(let i=1;i<coeffs.length;i++){
+    acc=addFrac(mulFrac(acc,r),frac(coeffs[i],1));
+  }
+  return acc;
+}
+function rationalCandidates(coeffs){
+  const lead=coeffs[0];
+  const constant=coeffs[coeffs.length-1];
+  if(constant===0) return [frac(0,1)];
+  const ps=divisors(constant);
+  const qs=divisors(lead);
+  const map=new Map();
+  for(const p of ps){
+    for(const q of qs){
+      for(const s of [-1,1]){
+        const r=frac(s*p,q);
+        map.set(`${r.n}/${r.d}`,r);
+      }
+    }
+  }
+  return [...map.values()].sort((x,y)=>x.n/x.d-y.n/y.d);
+}
+function rootsRational(coeffs){
+  return rationalCandidates(coeffs).filter(r=>evalAt(coeffs,r).n===0);
+}
+function syntheticQuotient(coeffs,r){
+  const q=[frac(coeffs[0],1)];
+  for(let i=1;i<coeffs.length-1;i++){
+    q.push(addFrac(frac(coeffs[i],1),mulFrac(q[q.length-1],r)));
+  }
+  const rem=addFrac(frac(coeffs[coeffs.length-1],1),mulFrac(q[q.length-1],r));
+  return {q,rem};
+}
+function rationalPolynomialHTML(qcoeffs){
+  const n=qcoeffs.length-1;
+  let out="";
+  qcoeffs.forEach((cf,i)=>{
+    const c=frac(cf.n,cf.d);
+    if(c.n===0) return;
+    const power=n-i;
+    const neg=c.n<0;
+    const abs=frac(Math.abs(c.n),c.d);
+    let coeffText=fracToText(abs);
+    let term="";
+    if(power===0) term=coeffText;
+    else{
+      const omit=abs.n===abs.d;
+      term=(omit?"":coeffText)+"x"+(power===1?"":`<sup>${power}</sup>`);
+    }
+    if(out==="") out=(neg?"−":"")+term;
+    else out+=neg?` − ${term}`:` + ${term}`;
+  });
+  return out||"0";
+}
+function isPerfectSquare(n){
+  if(n<0) return false;
+  const s=Math.round(Math.sqrt(n));
+  return s*s===n;
+}
+function setMessage(id,html,kind="info"){
+  document.getElementById(id).innerHTML=html ? `<div class="message ${kind}">${html}</div>` : "";
+}
+function updateCoeffLayout(){
+  const n=degree();
+  document.getElementById("dField").style.display=n===3?"block":"none";
+  document.getElementById("coefficients").style.gridTemplateColumns=n===3?"repeat(4,1fr)":"repeat(3,1fr)";
+}
+function updateConstruction(){
+  try{
+    updateCoeffLayout();
+    currentCoeffs=getCoeffs();
+    document.getElementById("polynomialDisplay").innerHTML=`f(x) = ${polynomialHTML(currentCoeffs)}`;
+    tested=[]; renderTestLog();
+    savedPrediction=null;
+    document.querySelectorAll('input[name="prediction"]').forEach(x=>x.checked=false);
+    setMessage("predictionMessage","");
+    setMessage("testMessage","");
+    setMessage("conclusion","");
+    document.getElementById("candidateBox").style.display="none";
+    if(ggbReady){
+      ggbApplet.reset();
+      ggbApplet.evalCommand(`f(x)=${polynomialGGB(currentCoeffs)}`);
+      ggbApplet.setLineThickness("f",5);
+      ggbApplet.setColor("f",23,91,145);
+      ggbApplet.setCoordSystem(-6,6,-12,12);
+      ggbApplet.setAxesVisible(true,true);
+      ggbApplet.setGridVisible(true);
+    }
+  }catch(e){
+    setMessage("conclusion",e.message,"bad");
+  }
+}
+function showCandidates(){
+  try{
+    const c=getCoeffs(), cand=rationalCandidates(c);
+    const lead=Math.abs(c[0]), cons=Math.abs(c[c.length-1]);
+    document.getElementById("candidateExplanation").innerHTML =
+      cons===0
+      ? `El término independiente es 0, por lo que <strong>r=0</strong> es un cero racional inmediato.`
+      : `p divide a ${cons} y q divide a ${lead}. Después de simplificar y eliminar duplicados se obtienen ${cand.length} candidatos.`;
+    const list=document.getElementById("candidateList");
+    list.innerHTML="";
+    cand.forEach(r=>{
+      const s=document.createElement("button");
+      s.className="chip";
+      s.type="button";
+      s.textContent=fracToText(r);
+      s.addEventListener("click",()=>{
+        document.getElementById("p").value=r.n;
+        document.getElementById("q").value=r.d;
+      });
+      list.appendChild(s);
+    });
+    document.getElementById("candidateBox").style.display="block";
+  }catch(e){setMessage("conclusion",e.message,"bad")}
+}
+function renderTestLog(){
+  const box=document.getElementById("testLog");
+  box.innerHTML=tested.map(t=>
+    `<div class="testrow"><span>r = ${fracToHTML(t.r)}</span><strong>f(r) = ${fracToHTML(t.value)}</strong></div>`
+  ).join("");
+}
+function factorizationFromRoot(coeffs,r){
+  const syn=syntheticQuotient(coeffs,r);
+  return `f(x) = (${minusRootText(r)})(${rationalPolynomialHTML(syn.q)})`;
+}
+function testRoot(){
+  try{
+    const coeffs=getCoeffs();
+    const p=Number(document.getElementById("p").value);
+    const q=Number(document.getElementById("q").value);
+    if(!Number.isInteger(p)||!Number.isInteger(q)) throw new Error("p y q deben ser enteros.");
+    const r=frac(p,q);
+    const value=evalAt(coeffs,r);
+    tested.unshift({r,value});
+    renderTestLog();
+    if(ggbReady){
+      ["R","V","s"].forEach(name=>{try{ggbApplet.deleteObject(name)}catch(e){}});
+      ggbApplet.evalCommand(`R=(${r.n}/${r.d},f(${r.n}/${r.d}))`);
+      ggbApplet.evalCommand(`V=(${r.n}/${r.d},0)`);
+      ggbApplet.evalCommand(`s=Segment(V,R)`);
+      ggbApplet.setPointSize("R",7);
+      ggbApplet.setPointSize("V",5);
+      ggbApplet.setLineThickness("s",4);
+      if(value.n===0){
+        ggbApplet.setColor("R",20,126,78);
+        ggbApplet.setColor("V",20,126,78);
+      }else{
+        ggbApplet.setColor("R",173,44,44);
+        ggbApplet.setColor("V",173,44,44);
+      }
+    }
+    if(value.n===0){
+      setMessage("testMessage",
+        `<strong>${fracToHTML(r)} sí es un cero racional.</strong><br>
+        Por el teorema del factor, ${minusRootText(r)} divide a f(x).<br>
+        ${factorizationFromRoot(coeffs,r)}.<br>
+        Por tanto, f(x) es reducible sobre ℚ.`,
+        "good");
+    }else{
+      setMessage("testMessage",
+        `f(${fracToHTML(r)}) = ${fracToHTML(value)} ≠ 0. Este candidato no es un cero; debes continuar con los demás.`,
+        "bad");
+    }
+  }catch(e){setMessage("testMessage",e.message,"bad")}
+}
+function savePrediction(){
+  const chosen=document.querySelector('input[name="prediction"]:checked');
+  if(!chosen){setMessage("predictionMessage","Selecciona primero una conjetura.","hint");return}
+  savedPrediction=chosen.value;
+  setMessage("predictionMessage",`Conjetura registrada: <strong>${savedPrediction==="reducible"?"reducible":"irreducible"}</strong>. Ahora debes justificarla.`,"info");
+}
+function reveal(){
+  try{
+    const coeffs=getCoeffs(), roots=rootsRational(coeffs), cand=rationalCandidates(coeffs);
+    const actual=roots.length?"reducible":"irreducible";
+    let comparison="";
+    if(savedPrediction){
+      comparison = savedPrediction===actual
+        ? `<br>Tu conjetura fue correcta.`
+        : `<br>Tu conjetura inicial debe revisarse.`;
+    }
+    if(roots.length){
+      const list=roots.map(fracToHTML).join(", ");
+      setMessage("conclusion",
+        `<strong>Clasificación: reducible sobre ℚ.</strong><br>
+        Entre los candidatos se encontró al menos un cero racional: ${list}.<br>
+        Usando r=${fracToHTML(roots[0])}: ${factorizationFromRoot(coeffs,roots[0])}.
+        ${comparison}`,"good");
+      if(ggbReady){
+        roots.forEach((r,i)=>{
+          const name=`Z_${i+1}`;
+          ggbApplet.evalCommand(`${name}=(${r.n}/${r.d},0)`);
+          ggbApplet.setPointSize(name,7);
+          ggbApplet.setColor(name,20,126,78);
+        });
+      }
+    }else{
+      setMessage("conclusion",
+        `<strong>Clasificación: irreducible sobre ℚ.</strong><br>
+        Se agotaron los ${cand.length} candidatos permitidos por el teorema de la raíz racional y ninguno anula a f.<br>
+        Como el grado es ${degree()}, si f fuera reducible tendría necesariamente un factor lineal y, por tanto, un cero racional. Esto no ocurre.
+        ${comparison}`,"good");
+    }
+  }catch(e){setMessage("conclusion",e.message,"bad")}
+}
+function hint(){
+  try{
+    const c=getCoeffs();
+    if(degree()===2){
+      const D=c[1]*c[1]-4*c[0]*c[2];
+      const text=isPerfectSquare(D)
+        ? `Δ = b²−4ac = ${D}, que es un cuadrado perfecto. Las raíces son racionales.`
+        : `Δ = b²−4ac = ${D}, que no es un cuadrado perfecto no negativo. No hay raíces racionales.`;
+      setMessage("conclusion",`<strong>Pista para grado 2:</strong> ${text}`,"hint");
+    }else{
+      setMessage("conclusion",
+        `<strong>Pista para grado 3:</strong> si existe una factorización no trivial, los grados de los factores deben ser 1 y 2. Por ello debe aparecer un factor lineal x−r con r∈ℚ.`,
+        "hint");
+    }
+  }catch(e){setMessage("conclusion",e.message,"bad")}
+}
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function choose(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function generateReducible(){
+  const n=degree();
+  const qs=[1,1,1,2,3];
+  if(n===2){
+    let p1=choose([-4,-3,-2,-1,1,2,3,4]), q1=choose(qs);
+    let p2=choose([-4,-3,-2,-1,1,2,3,4]), q2=choose(qs);
+    if(p1*q2===p2*q1) p2+=1;
+    const A=q1*q2;
+    const B=-(p1*q2+p2*q1);
+    const C=p1*p2;
+    setCoeffValues([A,B,C]);
+  }else{
+    const p=choose([-4,-3,-2,-1,1,2,3,4]), q=choose(qs);
+    let A,B,C,D;
+    for(let k=0;k<100;k++){
+      const u=choose([1,2,3]), v=randInt(-5,5), w=choose([-5,-4,-3,-2,-1,1,2,3,4,5]);
+      const disc=v*v-4*u*w;
+      if(!isPerfectSquare(disc)){
+        A=q*u;
+        B=q*v-p*u;
+        C=q*w-p*v;
+        D=-p*w;
+        break;
+      }
+    }
+    setCoeffValues([A,B,C,D]);
+  }
+}
+function generateIrreducible(){
+  const n=degree();
+  if(n===2){
+    for(let k=0;k<500;k++){
+      const a=choose([-3,-2,-1,1,2,3]), b=randInt(-7,7), c=choose([-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7]);
+      const D=b*b-4*a*c;
+      if(!isPerfectSquare(D)){setCoeffValues([a,b,c]);return}
+    }
+  }else{
+    for(let k=0;k<1000;k++){
+      const coeffs=[choose([-3,-2,-1,1,2,3]),randInt(-6,6),randInt(-6,6),choose([-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7])];
+      if(rootsRational(coeffs).length===0){setCoeffValues(coeffs);return}
+    }
+  }
+}
+function setCoeffValues(c){
+  ["a","b","c","d"].forEach((id,i)=>{if(c[i]!==undefined)document.getElementById(id).value=c[i]});
+  updateConstruction();
+}
+function quartic(){
+  if(!ggbReady)return;
+  ggbApplet.reset();
+  ggbApplet.evalCommand("g(x)=x^4+4");
+  ggbApplet.setLineThickness("g",5);
+  ggbApplet.setColor("g",154,94,0);
+  ggbApplet.setCoordSystem(-3.5,3.5,-1,20);
+  setMessage("conclusion",
+    `<strong>Contraejemplo de grado 4:</strong> g(x)=x⁴+4 no corta al eje x y no tiene ceros racionales, pero se factoriza como (x²−2x+2)(x²+2x+2).`,
+    "hint");
+}
+
+document.getElementById("degree").addEventListener("change",()=>{
+  updateCoeffLayout();
+  if(degree()===2) setCoeffValues([2,1,-1]);
+  else setCoeffValues([2,-3,-4,6]);
+});
+document.getElementById("updateBtn").addEventListener("click",updateConstruction);
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(degree()===2)setCoeffValues([2,1,-1]); else setCoeffValues([2,-3,-4,6]);
+});
+document.getElementById("candidateBtn").addEventListener("click",showCandidates);
+document.getElementById("hideCandidatesBtn").addEventListener("click",()=>document.getElementById("candidateBox").style.display="none");
+document.getElementById("testBtn").addEventListener("click",testRoot);
+document.getElementById("clearTestsBtn").addEventListener("click",()=>{tested=[];renderTestLog();setMessage("testMessage","")});
+document.getElementById("savePredictionBtn").addEventListener("click",savePrediction);
+document.getElementById("revealBtn").addEventListener("click",reveal);
+document.getElementById("hintBtn").addEventListener("click",hint);
+document.getElementById("reducibleBtn").addEventListener("click",generateReducible);
+document.getElementById("irreducibleBtn").addEventListener("click",generateIrreducible);
+document.getElementById("quarticBtn").addEventListener("click",quartic);
+document.getElementById("returnBtn").addEventListener("click",updateConstruction);
+</script>
+</body>
+</html>
