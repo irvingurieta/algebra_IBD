@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Laboratorio GeoGebra: irreducibilidad en Q[x]</title>
+<title>Laboratorio GeoGebra 2.0: irreducibilidad en Q[x]</title>
 <script src="https://www.geogebra.org/apps/deployggb.js"></script>
 <style>
   :root{
@@ -104,14 +104,26 @@
   @media (max-width:980px){
     .layout{grid-template-columns:1fr}
     .two-col{grid-template-columns:1fr}
-    #ggb-element{min-height:480px}
+    #ggb-element{min-height:460px}
+    .applet-card{padding:8px}
+  }
+  @media (max-width:620px){
+    main{padding:0 8px 24px}
+    header{padding:18px 14px}
+    .panel,.activity,.extension{padding:13px}
+    .grid2,.grid3{grid-template-columns:1fr !important}
+    .buttons button{flex:1 1 145px}
+    #ggb-element{min-height:410px}
+    .formula{font-size:1rem}
+    table{font-size:.82rem}
   }
 </style>
 </head>
 <body>
 <header>
-  <h1>Laboratorio GeoGebra: irreducibilidad de polinomios en ℚ[x]</h1>
+  <h1>Laboratorio GeoGebra 2.0: irreducibilidad de polinomios en ℚ[x]</h1>
   <p>Explora polinomios de grados 2 y 3, construye los candidatos a raíces racionales, comprueba valores y justifica la reducibilidad o irreducibilidad.</p>
+  <p style="margin-top:6px;font-size:.85rem;opacity:.9">Versión 2.0 · Compatible con computadoras, iPad y teléfonos.</p>
 </header>
 
 <main>
@@ -206,7 +218,7 @@
     </section>
 
     <section class="applet-card">
-      <div id="ggb-element"></div>
+      <div id="ggb-element"><div style="padding:20px;text-align:center;color:#5e6875">Cargando GeoGebra…</div></div>
       <div class="applet-note">
         La gráfica ayuda a localizar ceros reales, pero no decide por sí sola si son racionales. La decisión algebraica se realiza con la lista completa de candidatos.
       </div>
@@ -253,7 +265,7 @@
 </main>
 
 <footer>
-  Recurso diseñado para GeoGebra Classic/Calculadora Gráfica. Requiere conexión a Internet al abrir este archivo HTML para cargar el applet de GeoGebra.
+  Recurso diseñado con GeoGebra Classic. Requiere conexión a Internet al abrir este archivo HTML para cargar el applet de GeoGebra.
 </footer>
 
 <script>
@@ -263,7 +275,8 @@ let savedPrediction = null;
 let currentCoeffs = [2,1,-1];
 
 const params = {
-  appName: "graphing",
+  appName: "classic",
+  perspective: "G",
   width: 900,
   height: 520,
   showToolBar: false,
@@ -499,13 +512,11 @@ function testRoot(){
     tested.unshift({r,value});
     renderTestLog();
     if(ggbReady){
-      ["R","V","s"].forEach(name=>{try{ggbApplet.deleteObject(name)}catch(e){}});
+      ["R","V"].forEach(name=>{try{ggbApplet.deleteObject(name)}catch(e){}});
       ggbApplet.evalCommand(`R=(${r.n}/${r.d},f(${r.n}/${r.d}))`);
       ggbApplet.evalCommand(`V=(${r.n}/${r.d},0)`);
-      ggbApplet.evalCommand(`s=Segment(V,R)`);
       ggbApplet.setPointSize("R",7);
       ggbApplet.setPointSize("V",5);
-      ggbApplet.setLineThickness("s",4);
       if(value.n===0){
         ggbApplet.setColor("R",20,126,78);
         ggbApplet.setColor("V",20,126,78);
@@ -668,4 +679,3 @@ document.getElementById("returnBtn").addEventListener("click",updateConstruction
 </script>
 </body>
 </html>
-<!-- Activación de GitHub Pages -->
