@@ -1,16 +1,13 @@
-# Laboratorio GeoGebra 2.0: irreducibilidad en Q[x]
+# Laboratorio GeoGebra 2.0 — versión depurada
 
-## Correcciones principales
-- Se eliminó el comando `Segment`, que provocaba el error «Comando desconocido: Segmento» en algunos dispositivos.
-- El applet utiliza GeoGebra Classic con perspectiva gráfica.
-- Se mejoró la visualización en iPad, teléfonos y pantallas estrechas.
-- Se conserva la evaluación exacta de candidatos racionales y la retroalimentación algebraica.
+## Cambios realizados
+- Se eliminó la caja inicial con el enunciado del teorema.
+- Se eliminó la sección «Guía de trabajo para el estudiante».
+- Se eliminaron la «Secuencia de exploración» y las «Preguntas de institucionalización».
+- El resto de las funciones del recurso permanece sin cambios.
 
-## Actualización en GitHub
-1. Abra el repositorio `algebra_IBD`.
-2. Sustituya el archivo `index.html` anterior por el nuevo.
-3. Confirme el cambio con **Commit changes**.
-4. Espere a que termine `pages build and deployment`.
-5. Abra: https://irvingurieta.github.io/algebra_IBD/
-
-El recurso requiere conexión a Internet para cargar GeoGebra.
+## Actualización en GitHub Pages
+1. Sustituya el archivo `index.html` del repositorio `algebra_IBD`.
+2. Confirme el cambio con **Commit changes**.
+3. Espere a que finalice `pages build and deployment`.
+4. Abra nuevamente el sitio y actualice la página.
